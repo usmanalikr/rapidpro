@@ -1,0 +1,51 @@
+version: '3'
+services:
+  rapidpro:
+    depends_on:
+      - db
+    container_name: tc_rapid
+    networks:
+      - rapid_tc
+    build:
+      context: .
+      dockerfile: Dockerfile
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: "rapid_redis"
+    ports:
+      - "6379:6379"
+    networks:
+      - rapid_tc
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  elastic_search:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.5.0"
+    container_name: rapid_search
+    ports:
+    - 9200:9200
+    - 9300:9300
+    environment:
+      - discovery.type=single-node
+    networks:
+      - rapid_tc
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
+  db:
+    image: "kartoza/postgis:9.6-2.4"
+    container_name: "rapid_db"
+    ports:
+      - "54320:5432"
+    restart: always
+    networks:
+      - rapid_tc
+    environment:
+      - POSTGRES_USER=temba
+      - POSTGRES_PASS=temba
+      - POSTGRES_DBNAME=temba
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - pg_data:/var/lib/postgresql
+networks:
+  rapid_tc:
+    driver: bridge
+volumes:
+  pg_data:

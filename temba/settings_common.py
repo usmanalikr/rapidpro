@@ -929,7 +929,7 @@ _default_database_config = {
     "USER": "temba",
     "PASSWORD": "temba",
     "HOST": "localhost",
-    "PORT": "5432",
+    "PORT": "54320",
     "ATOMIC_REQUESTS": True,
     "CONN_MAX_AGE": 60,
     "OPTIONS": {},
